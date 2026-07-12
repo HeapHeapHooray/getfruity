@@ -10,6 +10,8 @@ A self-contained, zero-configuration, one-command installer for **FL Studio 2026
 
 ### ✨ Key Features
 
+* **Seamless Unlock**: FL Studio can be unlocked directly from the browser in this installation.
+* **Native System Integration**: After installation, FL Studio is available as a normal application on your host Linux system.
 * **One-Command Install**: Just run `./vanilla.sh` and watch the environment configure itself.
 * **Global CLI Tools**: Installs `cheapwine` globally using the `uv` tool manager.
 * **FL Cloud Integration**: Full support for Image-Line's FL Cloud sounds, mastering, and cloud services.
@@ -66,5 +68,12 @@ The bootstrapping script handles installing the following tools globally:
 * **wine**: The Windows compatibility layer
 * **cabextract, unzip, p7zip**: Core archiving utilities needed by winetricks to install DLLs
 * **wget, curl**: Networking utilities
+
+---
+
+## 🙏 Credits
+
+* **Gemini**: For AI assistance and code generation.
+* **DeepSeek**: For AI assistance and code generation.
 
 
