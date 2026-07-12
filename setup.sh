@@ -29,31 +29,35 @@ fi
 # Add common local bin paths to PATH to ensure uv is discoverable
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
 
-# 2. Install cheapwine globally as a uv tool
-echo -e "\n${BLUE}[2/3] Installing cheapwine globally as a uv tool...${NC}"
-uv tool install cheapwine --force
-echo -e "${GREEN}cheapwine installed successfully as a global uv tool.${NC}"
+# 2. Install or upgrade cheapwine globally as a uv tool
+echo -e "\n${BLUE}[2/3] Installing/Upgrading cheapwine globally as a uv tool...${NC}"
+if uv tool list | grep -q "cheapwine"; then
+    uv tool upgrade cheapwine
+else
+    uv tool install cheapwine
+fi
+echo -e "${GREEN}cheapwine is up-to-date.${NC}"
 
-# 3. Install Wine, Winetricks and dependencies globally
-echo -e "\n${BLUE}[3/3] Installing Wine, Winetricks and dependencies globally...${NC}"
+# 3. Install Wine and dependencies globally
+echo -e "\n${BLUE}[3/3] Installing Wine and dependencies globally...${NC}"
 
 # Detect package manager
 if command -v apt-get &> /dev/null; then
     echo -e "${YELLOW}Updating package lists and installing packages via apt (requires sudo)...${NC}"
     sudo apt-get update
-    sudo apt-get install -y wine winetricks cabextract unzip p7zip-full wget curl
+    sudo apt-get install -y wine cabextract unzip p7zip-full wget curl
 elif command -v dnf &> /dev/null; then
     echo -e "${YELLOW}Installing packages via dnf (requires sudo)...${NC}"
-    sudo dnf install -y wine winetricks cabextract unzip p7zip wget curl
+    sudo dnf install -y wine cabextract unzip p7zip wget curl
 elif command -v pacman &> /dev/null; then
     echo -e "${YELLOW}Installing packages via pacman (requires sudo)...${NC}"
-    sudo pacman -Sy --noconfirm wine winetricks cabextract unzip p7zip wget curl
+    sudo pacman -Sy --noconfirm wine cabextract unzip p7zip wget curl
 elif command -v brew &> /dev/null; then
     echo -e "${YELLOW}Installing packages via brew...${NC}"
-    brew install wine-stable winetricks cabextract unzip p7zip wget curl
+    brew install wine-stable cabextract unzip p7zip wget curl
 else
     echo -e "${RED}Error: Supported package manager (apt, dnf, pacman, brew) not found.${NC}"
-    echo -e "Please install wine, winetricks, cabextract, unzip, p7zip, and wget/curl manually."
+    echo -e "Please install wine, cabextract, unzip, p7zip, and wget/curl manually."
     exit 1
 fi
 

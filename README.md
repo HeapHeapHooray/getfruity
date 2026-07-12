@@ -6,7 +6,7 @@ A self-contained, zero-configuration, one-command installer for **FL Studio 2026
 
 ## 🚀 Overview
 
-**getfruity** is designed to provide a perfect global installation of FL Studio on Linux systems. It installs **cheapwine** globally using `uv tool` and installs other system dependencies (`wine`, `winetricks`, etc.) using your distribution's native package manager.
+**getfruity** is designed to provide a perfect global installation of FL Studio on Linux systems. It installs **cheapwine** globally using `uv tool` and installs other system dependencies (`wine`, etc.) using your distribution's native package manager.
 
 ### ✨ Key Features
 
@@ -28,7 +28,7 @@ graph TD
     B -->|No| C[setup.sh]
     C -->|1. Install| D[uv]
     C -->|2. Install global tool| E[cheapwine]
-    C -->|3. System packages| F[wine, winetricks, cabextract, unzip, p7zip, wget, curl]
+    C -->|3. System packages| F[wine, cabextract, unzip, p7zip, wget, curl]
     B -->|Yes| G[Run Installer]
     G -->|Downloads| H[FL Studio 2026 Installer]
     G -->|Initializes Prefix| I[cheapwine Prefix]
@@ -36,7 +36,7 @@ graph TD
     G -->|Installs| K[FL Studio 2026]
 ```
 
-1. **[vanilla.sh](file:///home/heap/Documents/getfruity/vanilla.sh)**: The main entry point. It verifies if `cheapwine`, `wine`, and `winetricks` are installed globally. If any are missing, it calls `setup.sh` to install them, then proceeds with the FL Studio installation.
+1. **[vanilla.sh](file:///home/heap/Documents/getfruity/vanilla.sh)**: The main entry point. It verifies if `cheapwine` and `wine` are installed globally. If any are missing, it calls `setup.sh` to install them, then proceeds with the FL Studio installation.
 2. **[setup.sh](file:///home/heap/Documents/getfruity/setup.sh)**: The bootstrap manager. It installs `uv` if missing, installs `cheapwine` globally via `uv tool install`, and installs system dependencies via the native package manager (`apt`, `dnf`, `pacman`, or `brew`).
 
 ---
@@ -64,7 +64,7 @@ chmod +x vanilla.sh setup.sh
 The bootstrapping script handles installing the following tools globally:
 * **cheapwine**: Installed globally via `uv tool install cheapwine` (located in `~/.local/bin`)
 * **wine**: The Windows compatibility layer
-* **winetricks**: Utility to install missing libraries in Wine prefixes
 * **cabextract, unzip, p7zip**: Core archiving utilities needed by winetricks to install DLLs
 * **wget, curl**: Networking utilities
+
 
