@@ -16,30 +16,31 @@ A self-contained, zero-configuration, one-command installer for **FL Studio 2026
 * **Global CLI Tools**: Installs `cheapwine` globally using the `uv` tool manager.
 * **FL Cloud Integration**: Full support for Image-Line's FL Cloud sounds, mastering, and cloud services.
 * **Gopher AI Assistant**: Out-of-the-box support for the integrated AI assistant for smart music generation and workflow helpers.
-* **Automatic Bootstrapping**: The script automatically detects missing packages and installs them using your system's package manager.
+* **Automatic Bootstrapping**: The script automatically detects missing dependencies and installs them (uv, cheapwine, wine, and system packages).
 
 ---
 
 ## 🛠️ How it Works
 
-The project consists of two highly optimized shell scripts:
+The project is a single self-contained script:
 
 ```mermaid
 graph TD
-    A[vanilla.sh] -->|Checks global binaries| B{Commands Available?}
-    B -->|No| C[setup.sh]
+    A[vanilla.sh] -->|Check dependencies| B{cheapwine & wine present?}
+    B -->|No| C[Bootstrap Setup]
     C -->|1. Install| D[uv]
     C -->|2. Install global tool| E[cheapwine]
     C -->|3. System packages| F[wine, cabextract, unzip, p7zip, wget, curl]
-    B -->|Yes| G[Run Installer]
-    G -->|Downloads| H[FL Studio 2026 Installer]
-    G -->|Initializes Prefix| I[cheapwine Prefix]
-    G -->|Applies Tricks| J[corefonts, webview2]
-    G -->|Installs| K[FL Studio 2026]
+    B -->|Yes| G[Upgrade cheapwine]
+    G --> H[Download FL Studio Installer]
+    C --> H
+    H -->|Initialize Prefix| I[cheapwine init]
+    I -->|Run Installer| J[cheapwine run]
+    J -->|Register App| K[cheapwine add]
+    K -->|Export Desktop Entry| L[cheapwine export]
 ```
 
-1. **[vanilla.sh](file:///home/heap/Documents/getfruity/vanilla.sh)**: The main entry point. It verifies if `cheapwine` and `wine` are installed globally. If any are missing, it calls `setup.sh` to install them, then proceeds with the FL Studio installation.
-2. **[setup.sh](file:///home/heap/Documents/getfruity/setup.sh)**: The bootstrap manager. It installs `uv` if missing, installs `cheapwine` globally via `uv tool install`, and installs system dependencies via the native package manager (`apt`, `dnf`, `pacman`, or `brew`).
+**[vanilla.sh](file:///home/heap/Documents/getfruity/vanilla.sh)**: The single entry point. If `cheapwine` or `wine` are missing, it bootstraps them (installing `uv`, then `cheapwine` via `uv tool install`, and system packages via the native package manager). Otherwise it upgrades `cheapwine`. Then it proceeds to download and install FL Studio.
 
 ---
 
@@ -54,7 +55,7 @@ An active internet connection and `sudo` access (to allow your package manager t
 Simply clone this repository and run the entry point script:
 
 ```bash
-chmod +x vanilla.sh setup.sh
+chmod +x vanilla.sh
 ./vanilla.sh
 ```
 
@@ -62,8 +63,8 @@ chmod +x vanilla.sh setup.sh
 
 ## 🔧 Under the Hood
 
-### System Packages Installed
-The bootstrapping script handles installing the following tools globally:
+### Dependencies Installed
+The bootstrapping logic handles installing the following tools globally:
 * **cheapwine**: Installed globally via `uv tool install cheapwine` (located in `~/.local/bin`)
 * **wine**: The Windows compatibility layer
 * **cabextract, unzip, p7zip**: Core archiving utilities needed by winetricks to install DLLs
