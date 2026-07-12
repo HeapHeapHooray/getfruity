@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Ensure user binary paths are in PATH
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+
 # Automatically bootstrap dependencies if not present globally
 if ! command -v cheapwine &> /dev/null || ! command -v wine &> /dev/null; then
     echo "Missing global dependencies. Bootstrapping setup..."
@@ -7,13 +10,8 @@ if ! command -v cheapwine &> /dev/null || ! command -v wine &> /dev/null; then
 else
     # cheapwine is already installed, make sure it is the latest version
     echo "Checking for cheapwine updates..."
-    # Ensure local uv is in PATH to run the upgrade
-    export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
-    uv tool upgrade cheapwine &> /dev/null || true
+    uv tool upgrade cheapwine || true
 fi
-
-# Ensure ~/.local/bin is in the PATH (where uv tool installs cheapwine)
-export PATH="$HOME/.local/bin:$PATH"
 
 wget -O /tmp/flstudio_win64.exe https://support.image-line.com/redirect/flstudio_win_installer
 cheapwine init --runner="kron4ek" --latencyflex --tricks corefonts --tricks webview2
