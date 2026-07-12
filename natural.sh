@@ -35,12 +35,20 @@ if ! command -v cheapwine &> /dev/null || ! command -v wine &> /dev/null; then
 
     # 2. Install or upgrade cheapwine globally as a uv tool
     echo -e "\n${BLUE}[2/3] Installing/Upgrading cheapwine globally as a uv tool...${NC}"
-    if uv tool list | grep -q "cheapwine"; then
-        uv tool upgrade cheapwine
+    if command -v cheapwine &> /dev/null; then
+        old_version=$(uv tool list | grep "^cheapwine " | awk '{print $2}' 2>/dev/null || echo "unknown")
+        upgrade_output=$(uv tool upgrade cheapwine 2>&1 || true)
+        new_version=$(uv tool list | grep "^cheapwine " | awk '{print $2}' 2>/dev/null || echo "unknown")
+        if [ "$old_version" != "$new_version" ] && [ "$old_version" != "unknown" ]; then
+            echo -e "${GREEN}cheapwine has been updated from $old_version to $new_version!${NC}"
+        else
+            echo -e "${GREEN}cheapwine is already up-to-date ($new_version).${NC}"
+        fi
     else
         uv tool install cheapwine
+        new_version=$(uv tool list | grep "^cheapwine " | awk '{print $2}' 2>/dev/null || echo "unknown")
+        echo -e "${GREEN}cheapwine $new_version installed successfully.${NC}"
     fi
-    echo -e "${GREEN}cheapwine is up-to-date.${NC}"
 
     # 3. Install Wine and dependencies globally
     echo -e "\n${BLUE}[3/3] Installing Wine and dependencies globally...${NC}"
@@ -66,8 +74,15 @@ if ! command -v cheapwine &> /dev/null || ! command -v wine &> /dev/null; then
 
     echo -e "\n${GREEN}=== Global environment setup completed successfully! ===${NC}"
 else
-    echo "Checking for cheapwine updates..."
-    uv tool upgrade cheapwine || true
+    echo -e "${BLUE}Checking for cheapwine updates...${NC}"
+    old_version=$(uv tool list | grep "^cheapwine " | awk '{print $2}' 2>/dev/null || echo "unknown")
+    upgrade_output=$(uv tool upgrade cheapwine 2>&1 || true)
+    new_version=$(uv tool list | grep "^cheapwine " | awk '{print $2}' 2>/dev/null || echo "unknown")
+    if [ "$old_version" != "$new_version" ] && [ "$old_version" != "unknown" ]; then
+        echo -e "${GREEN}cheapwine has been updated from $old_version to $new_version!${NC}"
+    else
+        echo -e "${GREEN}cheapwine is already up-to-date ($new_version).${NC}"
+    fi
 fi
 
 wget -O /tmp/flstudio_win64.exe https://support.image-line.com/redirect/flstudio_win_installer
