@@ -40,7 +40,7 @@ graph TD
     K -->|Export Desktop Entry| L[cheapwine export]
 ```
 
-**[vanilla.sh](file:///home/heap/Documents/getfruity/vanilla.sh)**: The single entry point. If `cheapwine` or `wine` are missing, it bootstraps them (installing `uv`, then `cheapwine` via `uv tool install`, and system packages via the native package manager). Otherwise it upgrades `cheapwine`. Then it proceeds to download and install FL Studio.
+**vanilla.sh**: The single entry point. If `cheapwine` or `wine` are missing, it bootstraps them (installing `uv`, then `cheapwine` via `uv tool install`, and system packages via the native package manager). Otherwise it upgrades `cheapwine`. Then it proceeds to download and install FL Studio.
 
 ---
 
