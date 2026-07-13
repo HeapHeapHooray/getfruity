@@ -44,7 +44,7 @@ graph TD
 
 **natural.sh**: The natural installer flavor. In addition to standard bootstrapping/installation, it downloads and installs the **Copycat** plugin (which lets you create melodies with a microphone and your voice).
 
-**maestro.sh**: The maestro installer flavor. In addition to the Copycat plugin and standard setup, it installs `gdown` and `unrar` to fetch and extract the classic **Edirol Orchestral VST**, and automatically applies a registry/wrapper compatibility patch so the VST runs flawlessly in FL Studio under Wine.
+**maestro.sh**: The maestro installer flavor. In addition to the Copycat plugin and standard setup, it installs `gdown` and `unrar` to fetch and extract the classic **Edirol Orchestral VST**, and automatically applies a [registry/wrapper compatibility patch](https://github.com/HeapHeapHooray/edirol-orchestral-patch) so the VST runs flawlessly in FL Studio under Wine.
 
 ---
 
@@ -70,7 +70,7 @@ chmod +x natural.sh
 ./natural.sh
 ```
 
-**Maestro (Includes Copycat + classic Edirol Orchestral VST patched for Wine):**
+**Maestro (Includes Copycat + classic [Edirol Orchestral VST patched](https://github.com/HeapHeapHooray/edirol-orchestral-patch) for Wine):**
 ```bash
 chmod +x maestro.sh
 ./maestro.sh
