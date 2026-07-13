@@ -12,11 +12,11 @@ A self-contained, zero-configuration, one-command installer for **FL Studio 2026
 
 * **Seamless Unlock**: FL Studio can be unlocked directly from the browser in this installation.
 * **Native System Integration**: After installation, FL Studio is available as a normal application on your host Linux system.
-* **Multiple Flavors / One-Command Install**: Choose between `./vanilla.sh` (standard) or `./natural.sh` (includes the Copycat plugin to easily create melodies with a microphone and your voice).
-* **Global CLI Tools**: Installs `cheapwine` globally using the `uv` tool manager.
+* **Multiple Flavors / One-Command Install**: Choose from three installer scripts: `./vanilla.sh` (standard), `./natural.sh` (includes Copycat), or `./maestro.sh` (includes Copycat + classic Edirol Orchestral VST).
+* **Global CLI Tools**: Installs `cheapwine` and `gdown` globally using the `uv` tool manager.
 * **FL Cloud Integration**: Full support for Image-Line's FL Cloud sounds, mastering, and cloud services.
 * **Gopher AI Assistant**: Out-of-the-box support for the integrated AI assistant for smart music generation and workflow helpers.
-* **Automatic Bootstrapping**: The script automatically detects missing dependencies and installs them (uv, cheapwine, wine, and system packages).
+* **Automatic Bootstrapping**: Automatically detects and installs all missing host and Wine environment dependencies (`uv`, `cheapwine`, `gdown`, `wine`, and utility packages).
 
 ---
 
@@ -26,12 +26,12 @@ The project is a single self-contained script:
 
 ```mermaid
 graph TD
-    A[vanilla.sh or natural.sh] -->|Check dependencies| B{cheapwine & wine present?}
+    A["vanilla.sh, natural.sh, or maestro.sh"] -->|Check dependencies| B{"Dependencies present?"}
     B -->|No| C[Bootstrap Setup]
     C -->|1. Install| D[uv]
-    C -->|2. Install global tool| E[cheapwine]
-    C -->|3. System packages| F[wine, cabextract, unzip, p7zip, wget, curl]
-    B -->|Yes| G[Upgrade cheapwine]
+    C -->|2. Install tools| E["cheapwine & gdown"]
+    C -->|3. System packages| F["wine, cabextract, unzip, p7zip, unrar, wget, curl"]
+    B -->|Yes| G["Upgrade CLI Tools"]
     G --> H[Download Installer/s]
     C --> H
     H -->|Initialize Prefix| I[cheapwine init]
@@ -40,9 +40,11 @@ graph TD
     K -->|Export Desktop Entry| L[cheapwine export]
 ```
 
-**vanilla.sh**: The standard installer flavor. If `cheapwine` or `wine` are missing, it bootstraps them (installing `uv`, then `cheapwine` via `uv tool install`, and system packages via the native package manager). Otherwise it upgrades `cheapwine`. Then it proceeds to download and install FL Studio.
+**vanilla.sh**: The standard installer flavor. Bootstraps/upgrades `cheapwine` and system utilities, initializes the Wine prefix, installs FL Studio 2026, and exports it to the host desktop.
 
-**natural.sh**: The natural installer flavor. In addition to the standard bootstrapping, it also downloads and installs the **Copycat** plugin, which lets you easily create melodies with a microphone and your voice.
+**natural.sh**: The natural installer flavor. In addition to standard bootstrapping/installation, it downloads and installs the **Copycat** plugin (which lets you create melodies with a microphone and your voice).
+
+**maestro.sh**: The maestro installer flavor. In addition to the Copycat plugin and standard setup, it installs `gdown` and `unrar` to fetch and extract the classic **Edirol Orchestral VST**, and automatically applies a registry/wrapper compatibility patch so the VST runs flawlessly in FL Studio under Wine.
 
 ---
 
@@ -68,6 +70,12 @@ chmod +x natural.sh
 ./natural.sh
 ```
 
+**Maestro (Includes Copycat + classic Edirol Orchestral VST patched for Wine):**
+```bash
+chmod +x maestro.sh
+./maestro.sh
+```
+
 ---
 
 ## 🔧 Under the Hood
@@ -75,8 +83,9 @@ chmod +x natural.sh
 ### Dependencies Installed
 The bootstrapping logic handles installing the following tools globally:
 * **cheapwine**: Installed globally via `uv tool install cheapwine` (located in `~/.local/bin`)
+* **gdown**: Installed globally via `uv tool install gdown` (to download files from Google Drive)
 * **wine**: The Windows compatibility layer
-* **cabextract, unzip, p7zip**: Core archiving utilities needed by winetricks to install DLLs
+* **cabextract, unzip, p7zip, unrar**: Core archiving utilities needed to extract packages/DLLs
 * **wget, curl**: Networking utilities
 
 ---
