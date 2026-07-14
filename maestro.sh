@@ -120,7 +120,7 @@ gdown "https://drive.google.com/file/d/1x5gnelKSljXLl_sDurlaAYBUBEov8rJr/view" -
 mkdir -p /tmp/edirol_maestro/
 unrar x -o+ /tmp/edirol_orchestral.rar /tmp/edirol_maestro/
 unzip -o /tmp/copycat-windows.zip -d /tmp/copycat_installer_windows
-cheapwine init --runner="kron4ek" --latencyflex --tricks corefonts --tricks webview2
+cheapwine init --runner="wine-ge" --latencyflex --tricks corefonts --tricks webview2
 cheapwine run /tmp/copycat_installer_windows/copycat_installer.exe "--silent" || true
 cheapwine run /tmp/edirol_maestro/setup-ttdown.EXE "/S" || true
 cheapwine run /tmp/flstudio_win64.exe "/S" || true

@@ -86,7 +86,7 @@ else
 fi
 
 wget -O /tmp/flstudio_win64.exe https://support.image-line.com/redirect/flstudio_win_installer
-cheapwine init --runner="kron4ek" --latencyflex --tricks corefonts --tricks webview2
+cheapwine init --runner="wine-ge" --latencyflex --tricks corefonts --tricks webview2
 cheapwine run /tmp/flstudio_win64.exe "/S" || true
 cheapwine add "FL Studio" FL64
 cheapwine export "FL Studio"

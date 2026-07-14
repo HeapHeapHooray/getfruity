@@ -88,7 +88,7 @@ fi
 wget -O /tmp/flstudio_win64.exe https://support.image-line.com/redirect/flstudio_win_installer
 wget -O /tmp/copycat-windows.zip https://github.com/HeapHeapHooray/Copycat/releases/latest/download/copycat-windows.zip
 unzip -o /tmp/copycat-windows.zip -d /tmp/copycat_installer_windows
-cheapwine init --runner="kron4ek" --latencyflex --tricks corefonts --tricks webview2
+cheapwine init --runner="wine-ge" --latencyflex --tricks corefonts --tricks webview2
 cheapwine run /tmp/copycat_installer_windows/copycat_installer.exe "--silent" || true
 cheapwine run /tmp/flstudio_win64.exe "/S" || true
 cheapwine add "FL Studio" FL64
