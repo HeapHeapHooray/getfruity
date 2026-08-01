@@ -12,7 +12,7 @@ A self-contained, zero-configuration, one-command installer for **FL Studio 2026
 
 * **Seamless Unlock**: FL Studio can be unlocked directly from the browser in this installation.
 * **Native System Integration**: After installation, FL Studio is available as a normal application on your host Linux system.
-* **Multiple Flavors / One-Command Install**: Choose from three installer scripts: `./vanilla.sh` (standard), `./natural.sh` (includes Copycat), or `./maestro.sh` (includes Copycat + classic Edirol Orchestral VST).
+* **Multiple Flavors / One-Command Install**: Choose from three installer scripts: `./vanilla.sh` (standard), `./natural.sh` (includes Copycat), or `./maestro.sh` (includes Copycat, Edirol Orchestral VST, and Synful Orchestra).
 * **Mozart Downloader**: All plugin and software installers are fetched reliably via `mozart_downloader`.
 * **Optimized Wine Runner & Environment**: Powered by `cheapwine` using the `wine-d2d1` runner, custom low-latency environment overrides, and bundled winetricks (`corefonts`, `webview2`, `vcrun2015`, `tahoma`, `nocrashdialog`).
 * **Global CLI Tools**: Installs `cheapwine` and `gdown` globally using the `uv` tool manager with `--no-cache` upgrade checks.
@@ -46,7 +46,7 @@ graph TD
 
 **natural.sh**: The natural installer flavor. In addition to standard bootstrapping/installation, it downloads and installs the **Copycat** plugin (which lets you create melodies with a microphone and your voice).
 
-**maestro.sh**: The maestro installer flavor. In addition to the Copycat plugin and standard setup, it downloads and extracts the classic **Edirol Orchestral VST**, and automatically applies a [registry/wrapper compatibility patch](https://github.com/HeapHeapHooray/edirol-orchestral-patch) so the VST runs flawlessly in FL Studio under Wine.
+**maestro.sh**: The maestro installer flavor. In addition to the Copycat plugin and standard setup, it downloads and installs **Synful Orchestra** as well as extracting the classic **Edirol Orchestral VST** with an automatic [registry/wrapper compatibility patch](https://github.com/HeapHeapHooray/edirol-orchestral-patch) so the VST runs flawlessly in FL Studio under Wine.
 
 ---
 
@@ -72,7 +72,7 @@ chmod +x natural.sh
 ./natural.sh
 ```
 
-**Maestro (Includes Copycat + classic [Edirol Orchestral VST patched](https://github.com/HeapHeapHooray/edirol-orchestral-patch) for Wine):**
+**Maestro (Includes Copycat + Synful Orchestra + classic [Edirol Orchestral VST patched](https://github.com/HeapHeapHooray/edirol-orchestral-patch) for Wine):**
 ```bash
 chmod +x maestro.sh
 ./maestro.sh

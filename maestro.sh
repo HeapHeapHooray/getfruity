@@ -125,13 +125,18 @@ curl -sSL https://raw.githubusercontent.com/HeapHeapHooray/mozart_downloader/mai
 echo -e "${BLUE}Downloading Copycat installer via mozart_downloader...${NC}"
 curl -sSL https://raw.githubusercontent.com/HeapHeapHooray/mozart_downloader/main/download_copycat.sh | bash -s -- /tmp/copycat-windows.zip
 
+echo -e "${BLUE}Downloading Synful Orchestra installer via mozart_downloader...${NC}"
+curl -sSL https://raw.githubusercontent.com/HeapHeapHooray/mozart_downloader/main/download_synful_orchestra.sh | bash -s -- /tmp/synful_orchestra.zip
+
 mkdir -p /tmp/edirol_maestro/
 unrar x -o+ /tmp/edirol_orchestral.rar /tmp/edirol_maestro/
 unzip -o /tmp/copycat-windows.zip -d /tmp/copycat_installer_windows
+unzip -o /tmp/synful_orchestra.zip -d /tmp/synful_installer
 
 cheapwine init --runner="wine-d2d1" --env "WINEDLLOVERRIDES=d3d11=b;dxgi=b;d3d9=b" --env "_JAVA_AWT_WM_NONREPARENTING=1" --env "_JAVA_OPTIONS=-Dprism.order=sw -Dprism.lcdtext=false -Dglass.win.uiScale=1.0" --env "WINEDLLOVERRIDES=d3d11=b;dxgi=b;d3d9=b;mfc140=b;msxml3=b;gdiplus=b" --env "WINEDBG_FLAGS=nodialog" --latencyflex --tricks corefonts --tricks webview2 --tricks vcrun2015 --tricks tahoma --tricks nocrashdialog
 
 cheapwine run /tmp/copycat_installer_windows/copycat_installer.exe "--silent" || true
+cheapwine run /tmp/synful_installer/SynfulOrchestraSetup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- || true
 cheapwine run /tmp/edirol_maestro/setup-ttdown.EXE "/S" || true
 cheapwine run /tmp/flstudio_win64.exe "/S" || true
 
