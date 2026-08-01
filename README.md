@@ -13,7 +13,9 @@ A self-contained, zero-configuration, one-command installer for **FL Studio 2026
 * **Seamless Unlock**: FL Studio can be unlocked directly from the browser in this installation.
 * **Native System Integration**: After installation, FL Studio is available as a normal application on your host Linux system.
 * **Multiple Flavors / One-Command Install**: Choose from three installer scripts: `./vanilla.sh` (standard), `./natural.sh` (includes Copycat), or `./maestro.sh` (includes Copycat + classic Edirol Orchestral VST).
-* **Global CLI Tools**: Installs `cheapwine` and `gdown` globally using the `uv` tool manager.
+* **Mozart Downloader**: All plugin and software installers are fetched reliably via `mozart_downloader`.
+* **Optimized Wine Runner & Environment**: Powered by `cheapwine` using the `wine-d2d1` runner, custom low-latency environment overrides, and bundled winetricks (`corefonts`, `webview2`, `vcrun2015`, `tahoma`, `nocrashdialog`).
+* **Global CLI Tools**: Installs `cheapwine` and `gdown` globally using the `uv` tool manager with `--no-cache` upgrade checks.
 * **FL Cloud Integration**: Full support for Image-Line's FL Cloud sounds, mastering, and cloud services.
 * **Gopher AI Assistant**: Out-of-the-box support for the integrated AI assistant for smart music generation and workflow helpers.
 * **Automatic Bootstrapping**: Automatically detects and installs all missing host and Wine environment dependencies (`uv`, `cheapwine`, `gdown`, `wine`, and utility packages).
@@ -22,29 +24,29 @@ A self-contained, zero-configuration, one-command installer for **FL Studio 2026
 
 ## 🛠️ How it Works
 
-The project is a single self-contained script:
+The installer automates environment setup, dependency management, software downloading, and desktop integration:
 
 ```mermaid
 graph TD
     A["vanilla.sh, natural.sh, or maestro.sh"] -->|Check dependencies| B{"Dependencies present?"}
     B -->|No| C[Bootstrap Setup]
     C -->|1. Install| D[uv]
-    C -->|2. Install tools| E["cheapwine & gdown"]
-    C -->|3. System packages| F["wine, cabextract, unzip, p7zip, unrar, wget, curl"]
+    C -->|2. Install tools| E["cheapwine & gdown (uv --no-cache)"]
+    C -->|3. System packages| F["wine, cabextract, unzip, 7zip, p7zip, unrar, wget, curl"]
     B -->|Yes| G["Upgrade CLI Tools"]
-    G --> H[Download Installer/s]
+    G --> H["Download via mozart_downloader"]
     C --> H
-    H -->|Initialize Prefix| I[cheapwine init]
-    I -->|Run Installer| J[cheapwine run]
+    H -->|Initialize Prefix with wine-d2d1 & tricks| I["cheapwine init --runner=wine-d2d1 --tricks --env"]
+    I -->|Run Installers| J[cheapwine run]
     J -->|Register App| K[cheapwine add]
     K -->|Export Desktop Entry| L[cheapwine export]
 ```
 
-**vanilla.sh**: The standard installer flavor. Bootstraps/upgrades `cheapwine` and system utilities, initializes the Wine prefix, installs FL Studio 2026, and exports it to the host desktop.
+**vanilla.sh**: The standard installer flavor. Bootstraps/upgrades `cheapwine` and system utilities, downloads FL Studio 2026 via `mozart_downloader`, initializes the `wine-d2d1` Wine prefix, installs FL Studio 2026, and exports it to the host desktop.
 
 **natural.sh**: The natural installer flavor. In addition to standard bootstrapping/installation, it downloads and installs the **Copycat** plugin (which lets you create melodies with a microphone and your voice).
 
-**maestro.sh**: The maestro installer flavor. In addition to the Copycat plugin and standard setup, it installs `gdown` and `unrar` to fetch and extract the classic **Edirol Orchestral VST**, and automatically applies a [registry/wrapper compatibility patch](https://github.com/HeapHeapHooray/edirol-orchestral-patch) so the VST runs flawlessly in FL Studio under Wine.
+**maestro.sh**: The maestro installer flavor. In addition to the Copycat plugin and standard setup, it downloads and extracts the classic **Edirol Orchestral VST**, and automatically applies a [registry/wrapper compatibility patch](https://github.com/HeapHeapHooray/edirol-orchestral-patch) so the VST runs flawlessly in FL Studio under Wine.
 
 ---
 
@@ -82,10 +84,10 @@ chmod +x maestro.sh
 
 ### Dependencies Installed
 The bootstrapping logic handles installing the following tools globally:
-* **cheapwine**: Installed globally via `uv tool install cheapwine` (located in `~/.local/bin`)
-* **gdown**: Installed globally via `uv tool install gdown` (to download files from Google Drive)
+* **cheapwine**: Installed globally via `uv tool install --no-cache cheapwine` (located in `~/.local/bin`)
+* **gdown**: Installed globally via `uv tool install --no-cache gdown` (to download files from Google Drive)
 * **wine**: The Windows compatibility layer
-* **cabextract, unzip, p7zip, unrar**: Core archiving utilities needed to extract packages/DLLs
+* **cabextract, unzip, 7zip, p7zip, unrar**: Core archiving utilities needed to extract packages/DLLs
 * **wget, curl**: Networking utilities
 
 ---
@@ -94,5 +96,3 @@ The bootstrapping logic handles installing the following tools globally:
 
 * **Gemini**: For AI assistance and code generation.
 * **DeepSeek**: For AI assistance and code generation.
-
-
