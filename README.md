@@ -12,7 +12,7 @@ A self-contained, zero-configuration, one-command installer for **FL Studio 2026
 
 * **Seamless Unlock**: FL Studio can be unlocked directly from the browser in this installation.
 * **Native System Integration**: After installation, FL Studio is available as a normal application on your host Linux system.
-* **Multiple Flavors / One-Command Install**: Choose from three installer scripts: `./vanilla.sh` (standard), `./natural.sh` (includes Copycat), or `./maestro.sh` (includes Copycat, Edirol Orchestral VST, and Synful Orchestra).
+* **Multiple Flavors / One-Command Install**: Choose from four installer scripts: `./vanilla.sh` (standard), `./natural.sh` (includes Copycat), `./maestro.sh` (includes Copycat, Edirol Orchestral VST, and Synful Orchestra), or `./maestro-plus.sh` (includes Copycat, Edirol Orchestral VST, Synful Orchestra, and Native Access).
 * **Mozart Downloader**: All plugin and software installers are fetched reliably via `mozart_downloader`.
 * **Optimized Wine Runner & Environment**: Powered by `cheapwine` using the `wine-d2d1` runner, custom low-latency environment overrides, and bundled winetricks (`corefonts`, `webview2`, `vcrun2015`, `tahoma`, `nocrashdialog`).
 * **Global CLI Tools**: Installs `cheapwine` and `gdown` globally using the `uv` tool manager with `--no-cache` upgrade checks.
@@ -28,7 +28,7 @@ The installer automates environment setup, dependency management, software downl
 
 ```mermaid
 graph TD
-    A["vanilla.sh, natural.sh, or maestro.sh"] -->|Check dependencies| B{"Dependencies present?"}
+    A["vanilla.sh, natural.sh, maestro.sh, or maestro-plus.sh"] -->|Check dependencies| B{"Dependencies present?"}
     B -->|No| C[Bootstrap Setup]
     C -->|1. Install| D[uv]
     C -->|2. Install tools| E["cheapwine & gdown (uv --no-cache)"]
@@ -47,6 +47,8 @@ graph TD
 **natural.sh**: The natural installer flavor. In addition to standard bootstrapping/installation, it downloads and installs the **Copycat** plugin (which lets you create melodies with a microphone and your voice).
 
 **maestro.sh**: The maestro installer flavor. In addition to the Copycat plugin and standard setup, it downloads and installs **Synful Orchestra** as well as extracting the classic **Edirol Orchestral VST** with an automatic [registry/wrapper compatibility patch](https://github.com/HeapHeapHooray/edirol-orchestral-patch) so the VST runs flawlessly in FL Studio under Wine.
+
+**maestro-plus.sh**: The maestro-plus installer flavor. Extends the Maestro flavor by also downloading, extracting, and configuring **Native Access** alongside automated **NTK Daemon** service setup and desktop launcher integration.
 
 ---
 
@@ -76,6 +78,12 @@ chmod +x natural.sh
 ```bash
 chmod +x maestro.sh
 ./maestro.sh
+```
+
+**Maestro Plus (Includes Copycat + Synful Orchestra + Edirol Orchestral VST + Native Access):**
+```bash
+chmod +x maestro-plus.sh
+./maestro-plus.sh
 ```
 
 ---
