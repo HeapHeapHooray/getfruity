@@ -144,7 +144,7 @@ if [ -f "${PLUGINS_DIR}/app-64.7z" ]; then
     (cd "${PLUGINS_DIR}" && 7z x -y app-64.7z)
 fi
 
-cheapwine init --runner="wine-d2d1" --env "WINEDLLOVERRIDES=d3d11=b;dxgi=b;d3d9=b" --env "_JAVA_AWT_WM_NONREPARENTING=1" --env "_JAVA_OPTIONS=-Dprism.order=sw -Dprism.lcdtext=false -Dglass.win.uiScale=1.0" --env "WINEDLLOVERRIDES=d3d11=b;dxgi=b;d3d9=b;mfc140=b;msxml3=b;gdiplus=b" --env "WINEDBG_FLAGS=nodialog" --latencyflex --tricks corefonts --tricks webview2 --tricks vcrun2015 --tricks tahoma --tricks nocrashdialog --tricks powershell
+cheapwine init --runner="wine-d2d1-msi" --env "WINEDLLOVERRIDES=d3d11=b;dxgi=b;d3d9=b" --env "_JAVA_AWT_WM_NONREPARENTING=1" --env "_JAVA_OPTIONS=-Dprism.order=sw -Dprism.lcdtext=false -Dglass.win.uiScale=1.0" --env "WINEDLLOVERRIDES=d3d11=b;dxgi=b;d3d9=b;mfc140=b;msxml3=b;gdiplus=b" --env "WINEDBG_FLAGS=nodialog" --latencyflex --tricks renderer=vulkan --tricks corefonts --tricks webview2 --tricks vcrun2015 --tricks tahoma --tricks nocrashdialog --tricks powershell
 
 cheapwine run /tmp/copycat_installer_windows/copycat_installer.exe "--silent" || true
 cheapwine run /tmp/synful_installer/SynfulOrchestraSetup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP- || true
