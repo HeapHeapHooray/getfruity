@@ -6,49 +6,50 @@ A self-contained, zero-configuration, one-command installer for **FL Studio 2026
 
 ## 🚀 Overview
 
-**getfruity** is designed to provide a perfect global installation of FL Studio on Linux systems. It installs **cheapwine** globally using `uv tool` and installs other system dependencies (`wine`, etc.) using your distribution's native package manager.
+**getfruity** provides an automated, global installation of FL Studio on Linux systems. It delegates dependency resolution, Wine prefix initialization, and software provisioning to modular scripts from [**mozart_utils**](https://github.com/HeapHeapHooray/mozart_utils) and [**mozart_installer**](https://github.com/HeapHeapHooray/mozart_installer).
 
 ### ✨ Key Features
 
-* **Seamless Unlock**: FL Studio can be unlocked directly from the browser in this installation.
-* **Native System Integration**: After installation, FL Studio is available as a normal application on your host Linux system.
-* **Multiple Flavors / One-Command Install**: Choose from four installer scripts: `./vanilla.sh` (standard), `./natural.sh` (includes Copycat), `./maestro.sh` (includes Copycat, Edirol Orchestral VST, and Synful Orchestra), or `./maestro-plus.sh` (includes Copycat, Edirol Orchestral VST, Synful Orchestra, and Native Access).
-* **Mozart Downloader**: All plugin and software installers are fetched reliably via `mozart_downloader`.
-* **Optimized Wine Runner & Environment**: Powered by `cheapwine` using the `wine-d2d1-msi` runner, custom low-latency environment overrides, and bundled winetricks (`renderer=vulkan`, `corefonts`, `webview2`, `vcrun2015`, `tahoma`, `nocrashdialog`, `powershell`).
-* **Global CLI Tools**: Installs `cheapwine` and `gdown` globally using the `uv` tool manager with `--no-cache` upgrade checks.
+* **Modular Ecosystem**: Powered by [`mozart_utils`](https://github.com/HeapHeapHooray/mozart_utils) for environment setup and prefix configuration, and [`mozart_installer`](https://github.com/HeapHeapHooray/mozart_installer) for component installations (backed by [`mozart_downloader`](https://github.com/HeapHeapHooray/mozart_downloader) for reliable downloads).
+* **Multiple Flavors / One-Command Install**: Choose from four lightweight installer scripts:
+  * `./vanilla.sh` (standard FL Studio 2026)
+  * `./natural.sh` (includes Copycat voice-to-melody plugin)
+  * `./maestro.sh` (includes Copycat, Edirol Orchestral VST with compatibility patch, and Synful Orchestra)
+  * `./maestro-plus.sh` (includes Copycat, Edirol Orchestral VST, Synful Orchestra, and Native Access with NTK Daemon)
+* **Automatic Bootstrapping**: Detects missing host dependencies and installs `uv`, `cheapwine`, `gdown`, `wine`, and essential system tools across major package managers (`apt`, `dnf`, `pacman`, `brew`).
+* **Optimized Wine Runner & Environment**: Uses `cheapwine` initialized with the `wine-d2d1-msi` runner, low-latency settings, custom DLL overrides, and winetricks (`renderer=vulkan`, `corefonts`, `webview2`, `vcrun2015`, `tahoma`, `nocrashdialog`, `powershell`).
+* **Seamless Unlock**: FL Studio can be unlocked directly from the browser within this environment.
+* **Native System Integration**: Installs and exports FL Studio and plugins as native desktop applications on your host Linux system.
 * **FL Cloud Integration**: Full support for Image-Line's FL Cloud sounds, mastering, and cloud services.
 * **Gopher AI Assistant**: Out-of-the-box support for the integrated AI assistant for smart music generation and workflow helpers.
-* **Automatic Bootstrapping**: Automatically detects and installs all missing host and Wine environment dependencies (`uv`, `cheapwine`, `gdown`, `wine`, and utility packages).
 
 ---
 
 ## 🛠️ How it Works
 
-The installer automates environment setup, dependency management, software downloading, and desktop integration:
+The installer scripts serve as streamlined orchestrators that fetch and run tested recipes from the Mozart toolchain:
 
 ```mermaid
-graph TD
-    A["vanilla.sh, natural.sh, maestro.sh, or maestro-plus.sh"] -->|Check dependencies| B{"Dependencies present?"}
-    B -->|No| C[Bootstrap Setup]
-    C -->|1. Install| D[uv]
-    C -->|2. Install tools| E["cheapwine & gdown (uv --no-cache)"]
-    C -->|3. System packages| F["wine, cabextract, unzip, 7zip, p7zip, unrar, wget, curl"]
-    B -->|Yes| G["Upgrade CLI Tools"]
-    G --> H["Download via mozart_downloader"]
-    C --> H
-    H -->|Initialize Prefix with wine-d2d1-msi & tricks| I["cheapwine init --runner=wine-d2d1-msi --tricks --env"]
-    I -->|Run Installers| J[cheapwine run]
-    J -->|Register App| K[cheapwine add]
-    K -->|Export Desktop Entry| L[cheapwine export]
+flowchart TD
+    A["Flavor Script (vanilla, natural, maestro, maestro-plus)"] --> B["mozart_utils: resolve_dependencies.sh"]
+    B -->|Check / Install Tools| C["uv, cheapwine, gdown, wine, & utilities"]
+    C --> D["mozart_utils: mozart_init.sh"]
+    D -->|Initialize Prefix| E["cheapwine init (wine-d2d1-msi runner, winetricks & env overrides)"]
+    E --> F["mozart_installer: Software Recipes"]
+    F -->|natural, maestro, maestro-plus| G["install_copycat.sh"]
+    F -->|maestro, maestro-plus| H["install_edirol.sh"]
+    F -->|maestro, maestro-plus| I["install_synful_orchestra.sh"]
+    F -->|maestro-plus| J["install_native_access.sh"]
+    F -->|All Flavors| K["install_flstudio.sh"]
+    K --> L["cheapwine export: FL Studio on Host Desktop"]
 ```
 
-**vanilla.sh**: The standard installer flavor. Bootstraps/upgrades `cheapwine` and system utilities, downloads FL Studio 2026 via `mozart_downloader`, initializes the `wine-d2d1-msi` Wine prefix, installs FL Studio 2026, and exports it to the host desktop.
+### Flavor Breakdown
 
-**natural.sh**: The natural installer flavor. In addition to standard bootstrapping/installation, it downloads and installs the **Copycat** plugin (which lets you create melodies with a microphone and your voice).
-
-**maestro.sh**: The maestro installer flavor. In addition to the Copycat plugin and standard setup, it downloads and installs **Synful Orchestra** as well as extracting the classic **Edirol Orchestral VST** with an automatic [registry/wrapper compatibility patch](https://github.com/HeapHeapHooray/edirol-orchestral-patch) so the VST runs flawlessly in FL Studio under Wine.
-
-**maestro-plus.sh**: The maestro-plus installer flavor. Extends the Maestro flavor by also downloading, extracting, and configuring **Native Access** alongside automated **NTK Daemon** service setup and desktop launcher integration.
+* **vanilla.sh**: Standard flavor. Calls `resolve_dependencies.sh` and `mozart_init.sh` from [`mozart_utils`](https://github.com/HeapHeapHooray/mozart_utils), then installs and exports FL Studio 2026 using `install_flstudio.sh` from [`mozart_installer`](https://github.com/HeapHeapHooray/mozart_installer).
+* **natural.sh**: Natural flavor. Runs environment setup via `mozart_utils`, installs the **Copycat** plugin (melody creation via microphone/voice) via [`mozart_installer/install_copycat.sh`](https://github.com/HeapHeapHooray/mozart_installer), and installs FL Studio 2026.
+* **maestro.sh**: Maestro flavor. Extends Natural flavor by installing **Synful Orchestra** ([`install_synful_orchestra.sh`](https://github.com/HeapHeapHooray/mozart_installer)) and extracting the classic **Edirol Orchestral VST** with an automatic [compatibility patch](https://github.com/HeapHeapHooray/edirol-orchestral-patch) ([`install_edirol.sh`](https://github.com/HeapHeapHooray/mozart_installer)) before installing FL Studio.
+* **maestro-plus.sh**: Complete production suite. Includes everything in Maestro flavor plus automated setup for **Native Access** and the **NTK Daemon** background service ([`install_native_access.sh`](https://github.com/HeapHeapHooray/mozart_installer)) alongside FL Studio 2026.
 
 ---
 
@@ -56,11 +57,11 @@ graph TD
 
 ### 📋 Prerequisites
 
-An active internet connection and `sudo` access (to allow your package manager to install `wine` and other system tools).
+An active internet connection and `sudo` access (to allow your system package manager to install `wine` and archiving dependencies if not already present).
 
 ### 🏃 Quick Start
 
-Simply clone this repository and run one of the installer scripts:
+Clone this repository and run your preferred flavor script:
 
 **Vanilla (Standard FL Studio 2026):**
 ```bash
@@ -74,7 +75,7 @@ chmod +x natural.sh
 ./natural.sh
 ```
 
-**Maestro (Includes Copycat + Synful Orchestra + classic [Edirol Orchestral VST patched](https://github.com/HeapHeapHooray/edirol-orchestral-patch) for Wine):**
+**Maestro (Includes Copycat + Synful Orchestra + patched [Edirol Orchestral VST](https://github.com/HeapHeapHooray/edirol-orchestral-patch)):**
 ```bash
 chmod +x maestro.sh
 ./maestro.sh
@@ -90,13 +91,27 @@ chmod +x maestro-plus.sh
 
 ## 🔧 Under the Hood
 
-### Dependencies Installed
-The bootstrapping logic handles installing the following tools globally:
-* **cheapwine**: Installed globally via `uv tool install --no-cache cheapwine` (located in `~/.local/bin`)
-* **gdown**: Installed globally via `uv tool install --no-cache gdown` (to download files from Google Drive)
-* **wine**: The Windows compatibility layer
-* **cabextract, unzip, 7zip, p7zip, unrar**: Core archiving utilities needed to extract packages/DLLs
-* **wget, curl**: Networking utilities
+### The Mozart Ecosystem
+
+* **[mozart_utils](https://github.com/HeapHeapHooray/mozart_utils)**:
+  * `resolve_dependencies.sh`: Bootstraps or upgrades CLI utilities (`uv`, `cheapwine`, `gdown`) and installs system packages across supported package managers (`wine`, `cabextract`, `unzip`, `7zip`, `p7zip-full`, `unrar`, `wget`, `curl`).
+  * `mozart_init.sh`: Configures the `cheapwine` Wine prefix with optimal runner (`wine-d2d1-msi`), low-latency flags, DLL overrides (`d3d11`, `dxgi`, `d3d9`, `mfc140`, `msxml3`, `gdiplus`), Java scaling parameters, and winetricks (`renderer=vulkan`, `corefonts`, `webview2`, `vcrun2015`, `tahoma`, `nocrashdialog`, `powershell`).
+* **[mozart_installer](https://github.com/HeapHeapHooray/mozart_installer)**:
+  * `install_flstudio.sh`: Downloads FL Studio installer, performs silent installation, registers the application with `cheapwine add`, and exports desktop shortcuts with `cheapwine export`.
+  * `install_copycat.sh`: Downloads and installs the Copycat voice-to-MIDI plugin.
+  * `install_edirol.sh`: Downloads and sets up EDIROL Orchestral with Wine registry adjustments.
+  * `install_synful_orchestra.sh`: Downloads and installs Synful Orchestra.
+  * `install_native_access.sh`: Downloads and installs Native Access with the NTK Daemon service.
+* **[mozart_downloader](https://github.com/HeapHeapHooray/mozart_downloader)**:
+  * Provides robust download scripts utilized by installer modules to fetch binaries and archives.
+
+### Dependencies Managed
+
+* **cheapwine**: Managed via `uv tool install --no-cache cheapwine`
+* **gdown**: Managed via `uv tool install --no-cache gdown`
+* **wine**: Windows compatibility layer installed via native package manager
+* **cabextract, unzip, 7zip, p7zip, unrar**: Archiving utilities for extracting installers and runtime assets
+* **wget, curl**: Data transfer utilities
 
 ---
 
