@@ -95,7 +95,7 @@ chmod +x maestro-plus.sh
 
 * **[mozart_utils](https://github.com/HeapHeapHooray/mozart_utils)**:
   * `resolve_dependencies.sh`: Bootstraps or upgrades CLI utilities (`uv`, `cheapwine`, `gdown`) and installs system packages across supported package managers (`wine`, `cabextract`, `unzip`, `7zip`, `p7zip-full`, `unrar`, `wget`, `curl`).
-  * `mozart_init.sh`: Configures the `cheapwine` Wine prefix with optimal runner (`wine-d2d1-msi`), low-latency flags, DLL overrides (`d3d11`, `dxgi`, `d3d9`, `mfc140`, `msxml3`, `gdiplus`), Java scaling parameters, and winetricks (`renderer=vulkan`, `corefonts`, `webview2`, `vcrun2015`, `tahoma`, `nocrashdialog`, `powershell`).
+  * `mozart_init.sh`: Configures the `cheapwine` Wine prefix with optimal runner (`wine-mozart`), low-latency flags, DLL overrides (`d3d11`, `dxgi`, `d3d9`, `mfc140`, `msxml3`, `gdiplus`), Java scaling parameters, and winetricks (`renderer=gl`, `corefonts`, `webview2`, `vcrun2015`, `tahoma`, `nocrashdialog`, `powershell`).
 * **[mozart_installer](https://github.com/HeapHeapHooray/mozart_installer)**:
   * `install_flstudio.sh`: Downloads FL Studio installer, performs silent installation, registers the application with `cheapwine add`, and exports desktop shortcuts with `cheapwine export`.
   * `install_copycat.sh`: Downloads and installs the Copycat voice-to-MIDI plugin.
