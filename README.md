@@ -1,6 +1,6 @@
 # 🍇 getfruity
 
-A self-contained, zero-configuration, one-command installer for **FL Studio 2026** on Linux. Featuring full out-of-the-box integration with **FL Cloud** and the **Gopher AI Assistant**.
+A self-contained, zero-configuration, one-command installer for **FL Studio 2026** on Linux. Featuring full out-of-the-box integration with **FL Cloud**, **FL Cloud Plugins** , and the **Gopher AI Assistant**.
 
 ---
 
